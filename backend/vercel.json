@@ -7,12 +7,6 @@
       "config": { "runtime": "python3.8" }
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
