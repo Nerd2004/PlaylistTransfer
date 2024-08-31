@@ -1,5 +1,5 @@
 "use client";
-
+import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -61,11 +61,6 @@ export default function Component() {
           {
             method: "GET",
             credentials: "include",
-            headers: {
-              "Access-Control-Allow-Origin":
-                "https://playlist-transfer-lovat.vercel.app", // or your deployed domain
-              "Access-Control-Allow-Credentials": "true",
-            },
           }
         );
         if (response.ok) {
