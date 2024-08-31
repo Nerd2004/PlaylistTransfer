@@ -61,6 +61,11 @@ export default function Component() {
           {
             method: "GET",
             credentials: "include",
+            headers: {
+              "Access-Control-Allow-Origin":
+                "https://playlist-transfer-lovat.vercel.app", // or your deployed domain
+              "Access-Control-Allow-Credentials": "true",
+            },
           }
         );
         if (response.ok) {
