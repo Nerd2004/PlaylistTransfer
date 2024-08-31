@@ -6,9 +6,7 @@ six==1.16.0
 cachetools==5.3.1
 pyasn1-modules==0.3.0
 rsa==4.9
-pathlib
-os-sys
 Flask-SSE
-Flask-Cors
-selenium
-webdriver-manager
+Flask-Cors==3.0.10
+selenium==4.6.0
+webdriver-manager==3.8.5
