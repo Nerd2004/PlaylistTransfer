@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, session, request, abort
+from flask import Blueprint, jsonify, redirect, session, request, abort
 from pathlib import Path
 import os
 from google.oauth2 import id_token
@@ -51,11 +51,12 @@ def login():
 @auth_bp.route('/check')
 @login_required
 def user_info():
-    return {
+    data = {
         "name": session.get("name"),
         "email": session.get("email"),
         "picture": session.get("picture"),
     }
+    return jsonify(data), 200
 
 
 @auth_bp.route("/callback")
