@@ -8,7 +8,6 @@ pyasn1-modules==0.3.0
 rsa==4.9
 pathlib
 os-sys
-google-auth-transport-requests
 Flask-SSE
 Flask-Cors
 selenium
