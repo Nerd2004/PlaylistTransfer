@@ -41,12 +41,13 @@ export default function Component() {
 
   const handleSignIn = async () => {
     setIsAuthenticating(true);
-    window.location.href = "http://localhost/login";
+    window.location.href = "https://playlist-transfer-backend.vercel.app/login";
   };
 
   const handleSignOut = () => {
     setIsLoading(true);
-    window.location.href = "http://localhost/logout";
+    window.location.href =
+      "https://playlist-transfer-backend.vercel.app/logout";
     setPlaylistLink("");
     setUserInfo(null);
   };
@@ -55,10 +56,13 @@ export default function Component() {
     const checkAuth = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost/check", {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          "https://playlist-transfer-backend.vercel.app/check",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const user = await response.json();
           setIsAuthenticated(true);
@@ -87,7 +91,9 @@ export default function Component() {
     setTransferProgress(5);
     setTransferStatus("Initializing transfer...");
 
-    const eventSource = new EventSource("http://localhost/logs");
+    const eventSource = new EventSource(
+      "https://playlist-transfer-backend.vercel.app/logs"
+    );
     let percentageIncrement = 0;
     let totalSongs = 0;
     eventSource.onmessage = (event) => {
@@ -124,15 +130,18 @@ export default function Component() {
     };
 
     try {
-      const response = await fetch("http://localhost/scrapeplaylist", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "text/event-stream",
-        },
-        credentials: "include",
-        body: JSON.stringify({ playlistLink: playlistLink }), // Sending the link in the body
-      });
+      const response = await fetch(
+        "https://playlist-transfer-backend.vercel.app/scrapeplaylist",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "text/event-stream",
+          },
+          credentials: "include",
+          body: JSON.stringify({ playlistLink: playlistLink }), // Sending the link in the body
+        }
+      );
 
       if (response.ok) {
         const data = await response.json(); // Await the .json() method to parse the response
