@@ -1,0 +1,15 @@
+Flask==2.3.2
+google-auth==2.22.0
+google-auth-oauthlib==1.0.0
+requests==2.31.0
+six==1.16.0
+cachetools==5.3.1
+pyasn1-modules==0.3.0
+rsa==4.9
+pathlib
+os-sys
+google-auth-transport-requests
+Flask-SSE
+Flask-Cors
+selenium
+webdriver-manager

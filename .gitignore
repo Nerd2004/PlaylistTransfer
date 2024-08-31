@@ -36,6 +36,7 @@ pip-wheel-metadata/
 .mypy_cache/
 .pyre/
 .pytype/
+client_secret.json
 
 # OS generated files
 .DS_Store
