@@ -11,7 +11,8 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "https://playlist-transfer-lovat.vercel.app"}}, supports_credentials=True)
 app.secret_key = os.getenv("CLIENT_SECRET")
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # Allow HTTP traffic for local dev
-app.config["SESSION_COOKIE_DOMAIN"] = ["https://playlist-transfer-lovat.vercel.app", "https://playlist-transfer-backend.vercel.app"]
+app.config["SESSION_COOKIE_DOMAIN"] = ".vercel.app"
+
 # Import your routes
 import auth
 import scraping
