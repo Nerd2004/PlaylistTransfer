@@ -5,7 +5,7 @@ export default {
     return [
       {
         source: "/api/:path*",
-        destination: "https://playlist-transfer-backend.vercel.app/api/:path*", // Proxy to Backend
+        destination: "https://playlist-transfer-backend.vercel.app/:path*", // Proxy to Backend
       },
     ];
   },
