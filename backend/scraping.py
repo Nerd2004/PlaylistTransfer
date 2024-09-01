@@ -20,7 +20,8 @@ from logging_manager import log_message
 
 
 scraping_bp = Blueprint('scraping', __name__)
-CORS(scraping_bp, supports_credentials=True)
+CORS(scraping_bp, supports_credentials=True, origins=["https://playlist-transfer-lovat.vercel.app"])
+
 
 user_agents = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',

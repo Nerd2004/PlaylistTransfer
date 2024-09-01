@@ -1,12 +1,14 @@
 from flask import Blueprint, jsonify, redirect, session, request, abort
 from pathlib import Path
 import os
+from flask_cors import CORS
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport import requests as google_requests
 from functools import wraps
 
 auth_bp = Blueprint('auth', __name__)
+CORS(auth_bp, supports_credentials=True, origins=["https://playlist-transfer-lovat.vercel.app"])
 
 GOOGLE_CLIENT_ID = os.getenv('CLIENT_ID')
 

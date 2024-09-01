@@ -7,7 +7,7 @@ from flask_cors import CORS
 
 
 youtube_bp = Blueprint('youtube', __name__)
-CORS(youtube_bp, supports_credentials=True)
+CORS(youtube_bp, supports_credentials=True, origins=["https://playlist-transfer-lovat.vercel.app"])
 
 def process_playlist(playlist_name, songs):
     log_message(f"PlaylistTransfer Found Total {len(songs)} songs from {playlist_name} Playlist")

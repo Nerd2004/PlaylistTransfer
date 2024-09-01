@@ -5,7 +5,7 @@ from flask_sse import sse
 from flask_cors import CORS
 
 logging_bp = Blueprint('logging', __name__)
-CORS(logging_bp, supports_credentials=True)
+CORS(logging_bp, supports_credentials=True, origins=["https://playlist-transfer-lovat.vercel.app"])
 log_queue = queue.Queue()
 
 def get_log_message():

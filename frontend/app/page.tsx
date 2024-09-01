@@ -19,7 +19,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Progress } from "@/components/ui/progres";
-import { Cookie } from "next-cookie";
 
 interface UserInfo {
   name: string;
