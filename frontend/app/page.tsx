@@ -56,10 +56,13 @@ export default function Component() {
     const checkAuth = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("api/check", {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          "https://playlist-transfer-backend.vercel.app/check",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const user = await response.json();
           setIsAuthenticated(true);
