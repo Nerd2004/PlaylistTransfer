@@ -33,7 +33,6 @@ flow = Flow.from_client_config(
 def login_required(function):
     @wraps(function)
     def decorated_function(*args, **kwargs):
-        print(session)
         if "google_id" not in session:
             return abort(401)  # Authorization required
         return function(*args, **kwargs)
