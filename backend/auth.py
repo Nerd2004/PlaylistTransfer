@@ -46,6 +46,7 @@ def login():
       include_granted_scopes='true',
       approval_prompt='force')
     session["state"] = state
+    print("Generated state:", state)
     return redirect(authorization_url)
 
 @auth_bp.route('/check')
@@ -62,8 +63,9 @@ def user_info():
 @auth_bp.route("/callback")
 def callback():
     flow.fetch_token(authorization_response=request.url)
-    print(session)
-    print(request.args)
+    # Log the session and request state for debugging
+    print("Session state:", session.get("state"))
+    print("Request state:", request.args.get("state"))
 
     if not session["state"] == request.args["state"]:
         abort(500)  # State does not match!
