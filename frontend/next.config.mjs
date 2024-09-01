@@ -1,5 +1,3 @@
-import { createProxyMiddleware } from "http-proxy-middleware";
-
 export default {
   async rewrites() {
     return [
@@ -18,11 +16,20 @@ export default {
             key: "Access-Control-Allow-Credentials",
             value: "true",
           },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "https://playlist-transfer-lovat.vercel.app", // Ensure the origin is correct
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, DELETE, OPTIONS",
+          },
         ],
       },
     ];
-  },
-  async redirects() {
-    return [];
   },
 };
