@@ -57,7 +57,8 @@ def get_songs():
     chrome_options.add_argument("--disable-dev-shm-usage")
 
     # Initialize the ChromeDriver with webdriver_manager
-    service = Service(ChromeDriverManager().install())
+    # service = Service(ChromeDriverManager().install())
+    service = Service(ChromeDriverManager(path="/tmp").install())
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     # Extract the playlist link from the request JSON body
