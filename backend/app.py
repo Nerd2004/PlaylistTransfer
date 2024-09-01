@@ -12,7 +12,7 @@ CORS(app, resources={r"/*": {"origins": "https://playlist-transfer-lovat.vercel.
 app.secret_key = os.getenv("CLIENT_SECRET")
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # Allow HTTP traffic for local dev
 
-app.config["SESSION_COOKIE_DOMAIN"] = ".vercel.app"
+# app.config["SESSION_COOKIE_DOMAIN"] = ".vercel.app"
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] = True
 
