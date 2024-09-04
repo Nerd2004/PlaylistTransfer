@@ -65,9 +65,6 @@ def user_info():
 @auth_bp.route("/callback")
 def callback():
     flow.fetch_token(authorization_response=request.url)
-    # Log the session and request state for debugging
-    print("Session state:", session.get("state"))
-    print("Request state:", request.args.get("state"))
 
     if not session["state"] == request.args["state"]:
         abort(500)  # State does not match!
