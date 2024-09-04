@@ -19,6 +19,7 @@ def searchResults(query, max_retries=3):
     while retries < max_retries:
         try:
             function_url = os.environ['AWS_FUNCTION_URI']
+            
             payload = {'action':'searchResults','query': f"{query}"}
             payload_json = json.dumps(payload)
             
@@ -57,14 +58,16 @@ def get_songs():
     try:
         # Invoke the Lambda function using Function URL
         function_url = os.environ['AWS_FUNCTION_URI']
+        print(os.environ.get('AWS_FUNCTION_URI'))
+
         payload = {'action':'get_songs','playlistLink': f"{playlist_link}"}
         payload_json = json.dumps(payload)
-        print(payload_json)
+        
         response = requests.post(function_url, json={'event': payload_json})
 
         # Parse the response
         song_list = response.json()
-        print(song_list)
+        
 
         playlist_name = song_list[0]
         del song_list[0]
@@ -79,7 +82,7 @@ def get_songs():
         # Create a dictionary mapping songs to their results
         result_map = dict(zip(song_list, results))
 
-        print(result_map)
+        
         return process_playlist(playlist_name,result_map)
 
     except Exception as e:
