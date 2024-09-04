@@ -18,7 +18,7 @@ def searchResults(query, max_retries=3):
     
     while retries < max_retries:
         try:
-            function_url = os.environ['AWS_FUNCTION_URI']
+            function_url = os.environ.get('AWS_FUNCTION_URI')
             
             payload = {'action':'searchResults','query': f"{query}"}
             payload_json = json.dumps(payload)
@@ -57,8 +57,7 @@ def get_songs():
 
     try:
         # Invoke the Lambda function using Function URL
-        function_url = os.environ['AWS_FUNCTION_URI']
-        print(os.environ.get('AWS_FUNCTION_URI'))
+        function_url = os.environ.get('AWS_FUNCTION_URI')
 
         payload = {'action':'get_songs','playlistLink': f"{playlist_link}"}
         payload_json = json.dumps(payload)
