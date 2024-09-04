@@ -2,38 +2,12 @@ import os
 import time
 from flask import Blueprint, json, request, jsonify
 from flask_cors import CORS
+import requests
 from youtube import process_playlist
 from logging_manager import log_message
-import boto3
 import concurrent.futures
-from botocore.config import Config
 scraping_bp = Blueprint('scraping', __name__)
 CORS(scraping_bp, supports_credentials=True)
-
-# Initialize the Boto3 client for Lambda
-config = Config(
-    read_timeout=900,  # Set this to the max time your Lambda function may take (up to 15 minutes)
-    connect_timeout=900
-)
-# lambda_client = boto3.client('lambda', region_name='us-east-1',config=config)
-
-# Create a Boto3 session
-session = boto3.Session(
-    aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-    aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
-    region_name='us-east-1'
-)
-
-# Create a Lambda client from the session
-# lambda_client = session.client('lambda')
-
-def create_lambda_client():
-    # session = boto3.Session(
-    #     aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-    #     aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
-    #     region_name='us-east-1'
-    # )
-    return session.client('lambda', config=config)
 
 
 def searchResults(query, max_retries=3):
@@ -44,18 +18,15 @@ def searchResults(query, max_retries=3):
     
     while retries < max_retries:
         try:
-            lambda_client = create_lambda_client()  # Create a new client for each call
-            # Invoke the Lambda function
-            response = lambda_client.invoke(
-                FunctionName='Scraper-SeleniumFunction-QOvvqKdVKlHh',
-                InvocationType='RequestResponse',
-                Payload=json.dumps({"action": "searchResults", "query": f"{query}"})
-            )
-        
-            # Parse the response
-            response_payload = json.loads(response['Payload'].read())
-            video_id = json.loads(response_payload.get('body'))
+            function_url = os.environ['AWS_FUNCTION_URI']
+            payload = {'action':'searchResults','query': f"{query}"}
+            payload_json = json.dumps(payload)
             
+            response = requests.post(function_url, json={'event': payload_json})
+
+            # Parse the response
+            video_id = response.json()
+           
             # Check if video_id is None or empty and retry if needed
             if video_id and video_id != None:
                 return video_id
@@ -79,24 +50,22 @@ def searchResults(query, max_retries=3):
 #Routes for scraping spotify playlist details 
 @scraping_bp.route("/scrapeplaylist", methods=["POST"])
 def get_songs():
-
     # Extract the playlist link from the request JSON body
     data = request.get_json()  # Get the JSON data from the request
     playlist_link = data.get("playlistLink")  # Extract the playlist_link field
 
     try:
-        # Invoke the Lambda function
-        lambda_client = create_lambda_client()  # Create a new client for each call
-        response = lambda_client.invoke(
-            FunctionName='Scraper-SeleniumFunction-QOvvqKdVKlHh',
-            InvocationType='RequestResponse', 
-            # Payload=json.dumps({"action":"list_files"})
-            Payload=json.dumps({"action":"get_songs","playlistLink": f"{playlist_link}"})  # Replace with your actual payload
-        )
-    
+        # Invoke the Lambda function using Function URL
+        function_url = os.environ['AWS_FUNCTION_URI']
+        payload = {'action':'get_songs','playlistLink': f"{playlist_link}"}
+        payload_json = json.dumps(payload)
+        print(payload_json)
+        response = requests.post(function_url, json={'event': payload_json})
+
         # Parse the response
-        response_payload = json.loads(response['Payload'].read())
-        song_list = json.loads(response_payload.get('body'))
+        song_list = response.json()
+        print(song_list)
+
         playlist_name = song_list[0]
         del song_list[0]
         
