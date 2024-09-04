@@ -17,13 +17,24 @@ config = Config(
 )
 # lambda_client = boto3.client('lambda', region_name='us-east-1',config=config)
 
+# Create a Boto3 session
+session = boto3.Session(
+    aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+    aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+    region_name='us-east-1'
+)
+
+# Create a Lambda client from the session
+# lambda_client = session.client('lambda')
+
 def create_lambda_client():
-    session = boto3.Session(
-        aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
-        aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
-        region_name='us-east-1'
-    )
+    # session = boto3.Session(
+    #     aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+    #     aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+    #     region_name='us-east-1'
+    # )
     return session.client('lambda', config=config)
+
 
 def searchResults(query, max_retries=3):
     log_message(f"Searching for {query}")
