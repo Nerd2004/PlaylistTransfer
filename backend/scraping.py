@@ -24,7 +24,7 @@ def searchResults(query, max_retries=3):
             payload_json = json.dumps(payload)
             
             response = requests.post(function_url, json={'event': payload_json})
-
+            
             # Parse the response
             video_id = response.json()
            
@@ -63,6 +63,7 @@ def get_songs():
         payload_json = json.dumps(payload)
         
         response = requests.post(function_url, json={'event': payload_json})
+        print(response)
 
         # Parse the response
         song_list = response.json()
@@ -85,6 +86,7 @@ def get_songs():
         return process_playlist(playlist_name,result_map)
 
     except Exception as e:
+        print(str(e))
         return jsonify({'error': str(e)}), 500
     
 
