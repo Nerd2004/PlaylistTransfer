@@ -10,7 +10,7 @@ scraping_bp = Blueprint('scraping', __name__)
 CORS(scraping_bp, supports_credentials=True)
 
 
-def searchResults(query, max_retries=3):
+def searchResults(query, max_retries=5):
     log_message(f"Searching for {query}")
     print(f"Searching for {query}")
     
@@ -72,8 +72,8 @@ def get_songs():
         playlist_name = song_list[0]
         del song_list[0]
         
-        log_message(f"PlaylistTransfer Found Total {len(song_list)} songs from playlist {playlist_name}")
-        print(f"PlaylistTransfer Found Total {len(song_list)} songs from playlist {playlist_name}")
+        log_message(f"PlaylistTransfer Found Total {len(song_list)} songs in playlist {playlist_name}")
+        print(f"PlaylistTransfer Found Total {len(song_list)} songs in playlist {playlist_name}")
     
         # Use ThreadPoolExecutor for I/O-bound tasks
         with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
@@ -82,6 +82,8 @@ def get_songs():
         # Create a dictionary mapping songs to their results
         result_map = dict(zip(song_list, results))
 
+        # for song, result in result_map.items():
+        #     print(f"{song}: {result}")
         
         return process_playlist(playlist_name,result_map)
 

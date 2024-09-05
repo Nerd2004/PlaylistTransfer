@@ -1,4 +1,5 @@
 import os
+import random
 import time
 from flask import Blueprint, json, jsonify, redirect, session, request, abort
 import requests
@@ -10,7 +11,6 @@ youtube_bp = Blueprint('youtube', __name__)
 CORS(youtube_bp, supports_credentials=True, origins=["https://playlist-transfer-lovat.vercel.app"])
 
 def process_playlist(playlist_name, songs):
-    log_message(f"PlaylistTransfer Found Total {len(songs)} songs from {playlist_name} Playlist")
     TOKEN_REFRESH_THRESHOLD = 300
 
     # Check if the token has expired or will expire soon
@@ -88,27 +88,41 @@ def process_playlist(playlist_name, songs):
             'position': index
             }
         }
+
+        # Attempt to add video with retries
+        playlistaddresponse = add_video_with_retries(videoadd_request_body,base_url,headers)
         
-        playlistaddresponse = requests.post(f"{base_url}/playlistItems?part=snippet", headers=headers, json=videoadd_request_body)
-        if playlistaddresponse.status_code == 200:
+        if playlistaddresponse:
             log_message(f"Added {name}")
             print(f"Added {name}")
-            index+=1
+            index += 1
         else:
-            print(f"Unable to Add {name}",playlistaddresponse.json())
+            print(f"Unable to add {name}")
+        
 
     return jsonify({'url': f"https://www.youtube.com/playlist?list={playlist_id}"})
 
 
-
-
-
-
-
-
-
-
-
+# Function for exponential backoff with retries
+def add_video_with_retries(videoadd_request_body,base_url,headers, max_retries=5):
+    retries = 0
+    while retries < max_retries:
+        playlistaddresponse = requests.post(f"{base_url}/playlistItems?part=snippet", headers=headers, json=videoadd_request_body)
+        if playlistaddresponse.status_code == 200:
+            return playlistaddresponse
+        elif playlistaddresponse.status_code == 403:
+            log_message("Daily Free API quota finished")
+            print("Daily Free API quota finished")
+            return None
+        else:
+            retries += 1
+            wait_time = (2 ** retries) + random.uniform(0, 1)  # Exponential backoff with jitter
+            print(f"Retrying in {wait_time:.2f} seconds due to error: {playlistaddresponse.json()}")
+            time.sleep(wait_time)
+    
+    # If max retries reached
+    print(f"Failed after {max_retries} attempts")
+    return None
 
 
 
