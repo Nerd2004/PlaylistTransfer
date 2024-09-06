@@ -41,13 +41,12 @@ export default function Component() {
 
   const handleSignIn = async () => {
     setIsAuthenticating(true);
-    window.location.href = "https://playlist-transfer-backend.vercel.app/login";
+    window.location.href = "https://playlisttransfer.site/login";
   };
 
   const handleSignOut = () => {
     setIsLoading(true);
-    window.location.href =
-      "https://playlist-transfer-backend.vercel.app/logout";
+    window.location.href = "https://playlisttransfer.site/logout";
     setPlaylistLink("");
     setUserInfo(null);
   };
@@ -56,13 +55,10 @@ export default function Component() {
     const checkAuth = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(
-          "https://playlist-transfer-backend.vercel.app/check",
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+        const response = await fetch("https://playlisttransfer.site/check", {
+          method: "GET",
+          credentials: "include",
+        });
         if (response.ok) {
           const user = await response.json();
           setIsAuthenticated(true);
@@ -91,9 +87,7 @@ export default function Component() {
     setTransferProgress(5);
     setTransferStatus("Initializing transfer...");
 
-    const eventSource = new EventSource(
-      "https://playlist-transfer-backend.vercel.app/logs"
-    );
+    const eventSource = new EventSource("https://playlisttransfer.site/logs");
     let percentageIncrement = 0;
     let totalSongs = 0;
     eventSource.onmessage = (event) => {
@@ -131,7 +125,7 @@ export default function Component() {
 
     try {
       const response = await fetch(
-        "https://playlist-transfer-backend.vercel.app/scrapeplaylist",
+        "https://playlisttransfer.site/scrapeplaylist",
         {
           method: "POST",
           headers: {
