@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+
 import { useEffect, useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -41,12 +41,12 @@ export default function Component() {
 
   const handleSignIn = async () => {
     setIsAuthenticating(true);
-    window.location.href = "https://playlisttransfer.site/login";
+    window.location.href = "http://localhost/login";
   };
 
   const handleSignOut = () => {
     setIsLoading(true);
-    window.location.href = "https://playlisttransfer.site/logout";
+    window.location.href = "http://localhost/logout";
     setPlaylistLink("");
     setUserInfo(null);
   };
@@ -55,7 +55,7 @@ export default function Component() {
     const checkAuth = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch("https://playlisttransfer.site/check", {
+        const response = await fetch("http://localhost/check", {
           method: "GET",
           credentials: "include",
         });
@@ -87,7 +87,9 @@ export default function Component() {
     setTransferProgress(5);
     setTransferStatus("Initializing transfer...");
 
-    const eventSource = new EventSource("https://playlisttransfer.site/logs");
+    const eventSource = new EventSource("http://localhost/logs", {
+      withCredentials: true,
+    });
     let percentageIncrement = 0;
     let totalSongs = 0;
     eventSource.onmessage = (event) => {
@@ -96,10 +98,8 @@ export default function Component() {
 
       if (message.startsWith("Extracting Songs from Playlist")) {
         setTransferProgress(20);
-      } else if (message.startsWith("Searching for")) {
-        setTransferProgress(40);
       } else if (message.startsWith("PlaylistTransfer Found Total")) {
-        setTransferProgress(60);
+        setTransferProgress(30);
         const match = message.match(/PlaylistTransfer Found Total (\d+) songs/);
         if (match) {
           totalSongs = parseInt(match[1], 10);
@@ -124,18 +124,15 @@ export default function Component() {
     };
 
     try {
-      const response = await fetch(
-        "https://playlisttransfer.site/scrapeplaylist",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "text/event-stream",
-          },
-          credentials: "include",
-          body: JSON.stringify({ playlistLink: playlistLink }), // Sending the link in the body
-        }
-      );
+      const response = await fetch("http://localhost/scrapeplaylist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "text/event-stream",
+        },
+        credentials: "include",
+        body: JSON.stringify({ playlistLink: playlistLink }), // Sending the link in the body
+      });
 
       if (response.ok) {
         const data = await response.json(); // Await the .json() method to parse the response
@@ -316,7 +313,7 @@ export default function Component() {
                 {transferProgress < 30 && (
                   <FileDown className="w-12 h-12 text-[#50E3C2] animate-bounce" />
                 )}
-                {transferProgress >= 30 && transferProgress < 65 && (
+                {transferProgress >= 30 && transferProgress < 60 && (
                   <Search className="w-12 h-12 text-[#50E3C2] animate-pulse" />
                 )}
                 {transferProgress >= 65 && (
