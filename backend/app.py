@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 
 
-CORS(app, resources={r"/*": {"origins": "https://playlist-transfer-lovat.vercel.app"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 app.secret_key = os.getenv("CLIENT_SECRET")
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # Allow HTTP traffic for local dev
 
