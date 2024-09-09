@@ -37,6 +37,11 @@ pip-wheel-metadata/
 .pyre/
 .pytype/
 client_secret.json
+.
+/.aws-sam/
+samconfig.toml
+
+
 
 # OS generated files
 .DS_Store

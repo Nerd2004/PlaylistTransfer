@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify, redirect, session, request, abort
+import uuid
+from flask import Blueprint, redirect, session, request, abort
 from pathlib import Path
 import os
 from flask_cors import CORS
@@ -8,8 +9,7 @@ from google.auth.transport import requests as google_requests
 from functools import wraps
 
 auth_bp = Blueprint('auth', __name__)
-CORS(auth_bp, supports_credentials=True, origins=["https://playlist-transfer-lovat.vercel.app"])
-
+CORS(auth_bp, supports_credentials=True)
 GOOGLE_CLIENT_ID = os.getenv('CLIENT_ID')
 
 client_secrets_file = Path(__file__).parent / "client_secret.json"
@@ -48,18 +48,16 @@ def login():
       include_granted_scopes='true',
       approval_prompt='force')
     session["state"] = state
-    print("Generated state:", state)
     return redirect(authorization_url)
 
 @auth_bp.route('/check')
 @login_required
 def user_info():
-    data = {
+    return {
         "name": session.get("name"),
         "email": session.get("email"),
         "picture": session.get("picture"),
     }
-    return jsonify(data), 200
 
 
 @auth_bp.route("/callback")
@@ -80,6 +78,8 @@ def callback():
         request=google_requests.Request(),
         audience=GOOGLE_CLIENT_ID
     )
+    session_id = str(uuid.uuid4())
+    session['session_id'] = session_id
     session["google_id"] = id_info.get("sub")
     session["name"] = id_info.get("name")
     session["picture"] = id_info.get("picture")
@@ -93,4 +93,4 @@ def logout():
 
 @auth_bp.route("/")
 def index():
-    return redirect("https://playlist-transfer-lovat.vercel.app")
+    return redirect("http://localhost:3000")

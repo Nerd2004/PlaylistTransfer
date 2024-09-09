@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  SeleniumFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Architectures:
+      - x86_64
+      Timeout: 840
+      MemorySize: 2048
+      ImageUri: seleniumfunction:latest
+    Metadata:
+      DockerContext: C:\Users\Admin\Desktop\my_lambda_project
+      Dockerfile: Dockerfile
+      SamResourceId: SeleniumFunction

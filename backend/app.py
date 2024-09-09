@@ -5,8 +5,10 @@ from flask_cors import CORS
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport import requests as requests
-
+from dotenv import load_dotenv
+load_dotenv()
 app = Flask(__name__)
+
 
 CORS(app, resources={r"/*": {"origins": "https://playlist-transfer-lovat.vercel.app"}}, supports_credentials=True)
 app.secret_key = os.getenv("CLIENT_SECRET")

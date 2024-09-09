@@ -8,9 +8,9 @@ from flask_cors import CORS
 
 
 youtube_bp = Blueprint('youtube', __name__)
-CORS(youtube_bp, supports_credentials=True, origins=["https://playlist-transfer-lovat.vercel.app"])
+CORS(youtube_bp, supports_credentials=True)
 
-def process_playlist(playlist_name, songs):
+def process_playlist(playlist_name,user_id, songs):
     TOKEN_REFRESH_THRESHOLD = 300
 
     # Check if the token has expired or will expire soon
@@ -46,8 +46,8 @@ def process_playlist(playlist_name, songs):
     }
     
     # Create a Playlist
-    log_message("Creating the Playlist on YouTube")
-    print("Creating the Playlist on YouTube")
+    log_message(user_id,"Creating the Playlist on YouTube")
+    print(user_id,"Creating the Playlist on YouTube")
     playlist_request_body={
         "snippet": {
             "title": str(playlist_name),
@@ -62,11 +62,11 @@ def process_playlist(playlist_name, songs):
         # Parse the JSON response
         data = response.json()
         playlist_id=data['id']
-        log_message("Playlist created successfully!")
-        print("Playlist created successfully!")
+        log_message(user_id,"Playlist created successfully!")
+        print(user_id,"Playlist created successfully!")
     elif response.status_code == 403:
-         log_message("Daily Free API quota finished")
-         print("Daily Free API quota finished")
+         log_message(user_id,"Daily Free API quota finished")
+         print(user_id,"Daily Free API quota finished")
          return{}
     else:
         print(f"Error: {response.status_code}")
@@ -90,28 +90,28 @@ def process_playlist(playlist_name, songs):
         }
 
         # Attempt to add video with retries
-        playlistaddresponse = add_video_with_retries(videoadd_request_body,base_url,headers)
+        playlistaddresponse = add_video_with_retries(user_id,videoadd_request_body,base_url,headers)
         
         if playlistaddresponse:
-            log_message(f"Added {name}")
-            print(f"Added {name}")
+            log_message(user_id,f"Added {name}")
+            print(user_id,f"Added {name}")
             index += 1
         else:
-            print(f"Unable to add {name}")
+            print(user_id,f"Unable to add {name}")
         
 
     return jsonify({'url': f"https://www.youtube.com/playlist?list={playlist_id}"})
 
 
 # Function for exponential backoff with retries
-def add_video_with_retries(videoadd_request_body,base_url,headers, max_retries=5):
+def add_video_with_retries(user_id,videoadd_request_body,base_url,headers, max_retries=5):
     retries = 0
     while retries < max_retries:
         playlistaddresponse = requests.post(f"{base_url}/playlistItems?part=snippet", headers=headers, json=videoadd_request_body)
         if playlistaddresponse.status_code == 200:
             return playlistaddresponse
         elif playlistaddresponse.status_code == 403:
-            log_message("Daily Free API quota finished")
+            log_message(user_id,"Daily Free API quota finished")
             print("Daily Free API quota finished")
             return None
         else:
@@ -123,6 +123,16 @@ def add_video_with_retries(videoadd_request_body,base_url,headers, max_retries=5
     # If max retries reached
     print(f"Failed after {max_retries} attempts")
     return None
+
+
+
+
+
+
+
+
+
+
 
 
 
