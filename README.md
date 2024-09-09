@@ -16,7 +16,10 @@ After Succesfully transferring:
 To build locally first go to google dev console get oauth credentials for your project to enable login
 You'll get a clients_secret.json like this:
 ![image](https://github.com/user-attachments/assets/95873dab-9f62-45ec-afb2-eb87fb1bec0b)
+
+
 Add this to the .env variable also deploy the lambda project on AWS lambda create function uri and paste them all in .env
+
 ![image](https://github.com/user-attachments/assets/0fac47fd-f7c1-4a7f-bf92-23acec2acf41)
 
 
